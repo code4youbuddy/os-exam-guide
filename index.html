@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operating Systems - Interactive Exam Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin: -30px -30px 25px -30px;
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header:hover {
+            transform: translateX(5px);
+        }
+
+        .toggle-icon {
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.collapsed .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .question-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .question {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .answer {
+            color: #555;
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .answer.show {
+            max-height: 1000px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .answer strong {
+            color: #764ba2;
+        }
+
+        .answer ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .answer li {
+            margin-bottom: 8px;
+        }
+
+        .diagram {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.1em;
+            border: 2px dashed #667eea;
+        }
+
+        .flow-arrow {
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .marks-badge {
+            display: inline-block;
+            background: #764ba2;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .section-header {
+                font-size: 1.3em;
+            }
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖥️ Operating Systems</h1>
+            <p class="subtitle">Interactive Exam Guide with Animated Explanations</p>
+        </header>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                SECTION-A <span class="marks-badge">1 mark each</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">1. What is the main function of an operating system?</div>
+                    <div class="answer">
+                        An operating system <strong>manages computer hardware</strong> and provides a platform for running application programs, acting as an <strong>interface between user and hardware</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">2. What does GUI, DOS stand for?</div>
+                    <div class="answer">
+                        <strong>GUI</strong> = Graphical User Interface<br>
+                        <strong>DOS</strong> = Disk Operating System
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">3. Define pre-emptive and non-pre-emptive scheduling.</div>
+                    <div class="answer">
+                        <strong>Pre-emptive scheduling:</strong> The CPU can interrupt a running process (preempt it) to switch to a higher-priority process.<br><br>
+                        <strong>Non-pre-emptive scheduling:</strong> Once a process gets the CPU, it runs until it completes or voluntarily yields the CPU.
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">4. Which memory is directly accessible by the CPU?</div>
+                    <div class="answer">
+                        <strong>Primary memory (RAM)</strong> is directly accessible by the CPU.
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">5. Name any one type of system call.</div>
+                    <div class="answer">
+                        <strong>Process control</strong> (e.g., fork or create_process)<br>
+                        OR<br>
+                        <strong>File management</strong> (e.g., open)
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">6. What is memory management in an operating system?</div>
+                    <div class="answer">
+                        Memory management is the OS function that handles <strong>allocation, deallocation, and organization</strong> of main memory for running processes.
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">7. What is paging?</div>
+                    <div class="answer">
+                        Paging is a memory-management scheme where <strong>physical memory is divided into fixed-size blocks called frames</strong>, and <strong>logical memory into same-size pages</strong>.
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">8. What is file management in an operating system?</div>
+                    <div class="answer">
+                        File management involves <strong>creating, deleting, organizing, and accessing files</strong> on storage devices, providing file-system services to users.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                SECTION-B <span class="marks-badge">5 marks each</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">1. Describe the process states in an operating system with the help of a state diagram.</div>
+                    <div class="answer">
+                        A process in an OS goes through several states:
+                        <ul>
+                            <li><strong>New:</strong> Process is created</li>
+                            <li><strong>Ready:</strong> Process is waiting in queue for CPU</li>
+                            <li><strong>Running:</strong> CPU is executing process instructions</li>
+                            <li><strong>Waiting:</strong> Process is blocked for I/O or event</li>
+                            <li><strong>Terminated:</strong> Process has finished execution</li>
+                        </ul>
+                        <div class="diagram">
+                            New <span class="flow-arrow">→</span> Ready <span class="flow-arrow">↔</span> Running <span class="flow-arrow">↔</span> Waiting<br>
+                            <span style="margin-left: 180px;">↓</span><br>
+                            <span style="margin-left: 150px;">Terminated</span>
+                        </div>
+                        Transitions occur when a process is admitted, scheduled, interrupted, or completes I/O.
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">2. Explain the different types of Operating System structures. Describe any three with examples.</div>
+                    <div class="answer">
+                        OS structures define how OS components are organized:
+                        <ul>
+                            <li><strong>Monolithic structure:</strong> Kernel contains all services (e.g., early Linux)
+                                <ul>
+                                    <li>✅ Advantages: Efficient, simple</li>
+                                    <li>❌ Disadvantages: Complex debugging, error handling issues</li>
+                                </ul>
+                            </li>
+                            <li><strong>Layered structure:</strong> OS divided into layers with each providing services to the layer above (e.g., THE OS)
+                                <ul>
+                                    <li>✅ Advantages: Modular, easy debugging</li>
+                                    <li>❌ Disadvantages: Performance overhead</li>
+                                </ul>
+                            </li>
+                            <li><strong>Microkernel structure:</strong> Minimal kernel with core functions; other services run in user space (e.g., Mach)
+                                <ul>
+                                    <li>✅ Advantages: Portability, security</li>
+                                    <li>❌ Disadvantages: Performance overhead due to message passing</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">3. What is an Operating System? Explain its main functions.</div>
+                    <div class="answer">
+                        An <strong>Operating System</strong> is system software that manages hardware resources and provides services to application programs.
+                        <br><br><strong>Main functions:</strong>
+                        <ul>
+                            <li><strong>Process management:</strong> Create, schedule, terminate processes</li>
+                            <li><strong>Memory management:</strong> Allocate, deallocate memory</li>
+                            <li><strong>File system management:</strong> Organize, access files</li>
+                            <li><strong>Device management:</strong> Manage I/O devices</li>
+                            <li><strong>Provide user interface:</strong> CLI or GUI</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">4. Explain processor and User modes. Describe how the user interacts with the operating system (interface).</div>
+                    <div class="answer">
+                        <strong>Processor modes:</strong>
+                        <ul>
+                            <li><strong>Kernel mode:</strong> OS has full access to hardware</li>
+                            <li><strong>User mode:</strong> User programs run with restricted access</li>
+                        </ul>
+                        <br><strong>User interacts with OS via:</strong>
+                        <ul>
+                            <li><strong>Command-Line Interface (CLI):</strong> Text commands</li>
+                            <li><strong>Graphical User Interface (GUI):</strong> Visual icons, windows</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">5. Explain the different types of file operations performed by an operating system.</div>
+                    <div class="answer">
+                        Common file operations:
+                        <ul>
+                            <li><strong>Create:</strong> Allocate space and entry in directory</li>
+                            <li><strong>Open:</strong> Load file attributes into memory</li>
+                            <li><strong>Read/Write:</strong> Transfer data between file and process memory</li>
+                            <li><strong>Close:</strong> Release file resources</li>
+                            <li><strong>Delete:</strong> Remove file entry and free space</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">6. Explain various types of cyber attacks in operating systems.</div>
+                    <div class="answer">
+                        Common OS-related cyber attacks:
+                        <ul>
+                            <li><strong>Malware:</strong> Malicious software (viruses, worms)</li>
+                            <li><strong>Buffer overflow:</strong> Overwriting memory to execute code</li>
+                            <li><strong>Privilege escalation:</strong> Gaining higher access rights</li>
+                            <li><strong>Denial of Service (DoS):</strong> Overwhelming OS resources</li>
+                            <li><strong>Rootkit:</strong> Hiding malicious processes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                SECTION-C <span class="marks-badge">10 marks each</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">1. Explain different types of Operating Systems with suitable examples.</div>
+                    <div class="answer">
+                        <ul>
+                            <li><strong>Batch Operating System:</strong> Executes batch jobs, no user interaction (e.g., payroll processing)</li>
+                            <li><strong>Time-Sharing Operating System:</strong> Multiple users share CPU, interactive (e.g., UNIX)</li>
+                            <li><strong>Distributed Operating System:</strong> Manages distributed resources, networked systems (e.g., cloud computing)</li>
+                            <li><strong>Real-Time Operating System:</strong> Predictable response time, critical applications (e.g., embedded systems)</li>
+                            <li><strong>Network Operating System:</strong> Manages network resources, provides services (e.g., Windows Server)</li>
+                            <li><strong>Mobile Operating System:</strong> Designed for mobile devices, touch interface (e.g., Android, iOS)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">2. Explain the First Come First Serve (FCFS) scheduling algorithm. Write its algorithm statement and illustrate it with an example.</div>
+                    <div class="answer">
+                        <strong>FCFS Algorithm:</strong> Execute processes in arrival order
+                        <div class="code-block">
+Algorithm:
+1. Process arrives, add to ready queue
+2. CPU executes process until completion
+3. Repeat for next process in queue
+                        </div>
+                        <strong>Example:</strong> Processes P1, P2, P3 arrive at 0, 2, 4 ms
+                        <div class="diagram">
+                            P1: 0-5 ms<br>
+                            P2: 5-8 ms<br>
+                            P3: 8-10 ms
+                        </div>
+                        <ul>
+                            <li>✅ <strong>Advantages:</strong> Simple, easy to implement</li>
+                            <li>❌ <strong>Disadvantages:</strong> Non-preemptive, may lead to poor performance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="toggleAnswer(this)">
+                    <div class="question">3. Explain different types of memory management techniques in Operating system.</div>
+                    <div class="answer">
+                        <ul>
+                            <li><strong>Contiguous Allocation:</strong> Each process in contiguous memory block</li>
+                            <li><strong>Paging:</strong> Divide memory into fixed-size pages</li>
+                            <li><strong>Segmentation:</strong> Divide memory into variable-size segments</li>
+                            <li><strong>Virtual Memory:</strong> Use secondary storage to extend RAM</li>
+                        </ul>
+                        <br>
+                        <ul>
+                            <li>✅ <strong>Advantages:</strong> Efficient memory use, protection</li>
+                            <li>❌ <strong>Disadvantages:</strong> Complexity, overhead</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="expandAll()">Expand All</button>
+    </div>
+
+    <script>
+        function toggleAnswer(card) {
+            const answer = card.querySelector('.answer');
+            answer.classList.toggle('show');
+        }
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function expandAll() {
+            const allAnswers = document.querySelectorAll('.answer');
+            const allSections = document.querySelectorAll('.section-content');
+            
+            allAnswers.forEach(answer => answer.classList.add('show'));
+            allSections.forEach(section => section.classList.remove('collapsed'));
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.question-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

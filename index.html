@@ -23,6 +23,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            padding-bottom: 100px;
         }
 
         header {
@@ -92,14 +93,15 @@
         }
 
         .section-content {
-            max-height: 10000px;
-            overflow: hidden;
+            max-height: 50000px;
+            overflow: visible;
             transition: max-height 0.5s ease, opacity 0.5s ease;
         }
 
         .section-content.collapsed {
             max-height: 0;
             opacity: 0;
+            overflow: hidden;
         }
 
         .question-card {
@@ -129,15 +131,16 @@
             padding-left: 20px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
+            transition: max-height 0.6s ease, padding 0.6s ease;
         }
 
         .answer.show {
-            max-height: 10000px;
+            max-height: 50000px;
             padding: 15px 20px;
             background: white;
             border-radius: 8px;
             margin-top: 10px;
+            overflow: visible;
         }
 
         .answer strong {

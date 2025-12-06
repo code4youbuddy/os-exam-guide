@@ -92,7 +92,7 @@
         }
 
         .section-content {
-            max-height: 5000px;
+            max-height: 10000px;
             overflow: hidden;
             transition: max-height 0.5s ease, opacity 0.5s ease;
         }
@@ -133,7 +133,7 @@
         }
 
         .answer.show {
-            max-height: 1000px;
+            max-height: 10000px;
             padding: 15px 20px;
             background: white;
             border-radius: 8px;
@@ -162,6 +162,14 @@
             font-family: monospace;
             font-size: 1.1em;
             border: 2px dashed #667eea;
+        }
+
+        .diagram-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .flow-arrow {
@@ -211,6 +219,50 @@
             overflow-x: auto;
         }
 
+        .subsection {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .subsection-title {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f5f7fa;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
@@ -245,13 +297,29 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
+
+        .note-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .example-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🖥️ Operating Systems</h1>
-            <p class="subtitle">Interactive Exam Guide with Animated Explanations</p>
+            <p class="subtitle">Interactive Exam Guide with Detailed Explanations & Diagrams</p>
         </header>
 
         <div class="section">
@@ -331,106 +399,1070 @@
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">1. Describe the process states in an operating system with the help of a state diagram.</div>
                     <div class="answer">
-                        A process in an OS goes through several states:
-                        <ul>
-                            <li><strong>New:</strong> Process is created</li>
-                            <li><strong>Ready:</strong> Process is waiting in queue for CPU</li>
-                            <li><strong>Running:</strong> CPU is executing process instructions</li>
-                            <li><strong>Waiting:</strong> Process is blocked for I/O or event</li>
-                            <li><strong>Terminated:</strong> Process has finished execution</li>
-                        </ul>
-                        <div class="diagram">
-                            New <span class="flow-arrow">→</span> Ready <span class="flow-arrow">↔</span> Running <span class="flow-arrow">↔</span> Waiting<br>
-                            <span style="margin-left: 180px;">↓</span><br>
-                            <span style="margin-left: 150px;">Terminated</span>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            A process is a program in execution. During its lifetime, a process transitions through various states as it is created, scheduled, executed, and terminated. Understanding these states is crucial for process management in operating systems.
                         </div>
-                        Transitions occur when a process is admitted, scheduled, interrupted, or completes I/O.
+
+                        <div class="subsection">
+                            <div class="subsection-title">🔄 Process States Explained</div>
+                            <ul>
+                                <li><strong>New (Created):</strong> The process is being created. The OS allocates resources and initializes the Process Control Block (PCB). The process is not yet ready to execute.</li>
+                                
+                                <li><strong>Ready:</strong> The process has all necessary resources and is waiting in the ready queue for CPU allocation. Multiple processes can be in the ready state simultaneously, managed by the scheduler.</li>
+                                
+                                <li><strong>Running:</strong> The process is currently being executed by the CPU. Instructions are being fetched and executed. Only one process per CPU core can be in running state at any given time.</li>
+                                
+                                <li><strong>Waiting (Blocked):</strong> The process cannot continue execution until some event occurs (e.g., I/O completion, signal from another process). The process is moved to a waiting queue and the CPU is allocated to another process.</li>
+                                
+                                <li><strong>Terminated (Exit):</strong> The process has finished execution. The OS deallocates resources, removes the PCB, and cleans up memory. The process no longer exists in the system.</li>
+                            </ul>
+                        </div>
+
+                        <div class="diagram">
+                            <strong>Process State Transition Diagram</strong><br><br>
+                            ┌─────────┐<br>
+                            │   NEW   │<br>
+                            └────┬────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ (Admitted)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                            ┌─────────┐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌──────────┐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌──────────┐<br>
+                            │  READY  │◄─────────│ RUNNING  │─────────►│ WAITING  │<br>
+                            └─────────┘&nbsp;&nbsp;(Interrupt)└──────────┘(I/O or Event)└──────────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;▲&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;└─────────────────────────┘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Scheduler Dispatch)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌──────────┐<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│TERMINATED│<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──────────┘<br>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">⚡ State Transitions</div>
+                            <ul>
+                                <li><strong>New → Ready:</strong> Process is admitted by long-term scheduler</li>
+                                <li><strong>Ready → Running:</strong> Process is selected by CPU scheduler (dispatch)</li>
+                                <li><strong>Running → Ready:</strong> Time quantum expires (in time-sharing) or higher priority process arrives</li>
+                                <li><strong>Running → Waiting:</strong> Process requests I/O or waits for an event</li>
+                                <li><strong>Waiting → Ready:</strong> I/O completion or event occurrence</li>
+                                <li><strong>Running → Terminated:</strong> Process completes execution or is killed</li>
+                            </ul>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>📝 Note:</strong> The CPU scheduler only selects processes from the Ready queue. Processes in the Waiting state must first return to Ready state before they can be executed again.
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">2. Explain the different types of Operating System structures. Describe any three with examples.</div>
                     <div class="answer">
-                        OS structures define how OS components are organized:
-                        <ul>
-                            <li><strong>Monolithic structure:</strong> Kernel contains all services (e.g., early Linux)
-                                <ul>
-                                    <li>✅ Advantages: Efficient, simple</li>
-                                    <li>❌ Disadvantages: Complex debugging, error handling issues</li>
-                                </ul>
-                            </li>
-                            <li><strong>Layered structure:</strong> OS divided into layers with each providing services to the layer above (e.g., THE OS)
-                                <ul>
-                                    <li>✅ Advantages: Modular, easy debugging</li>
-                                    <li>❌ Disadvantages: Performance overhead</li>
-                                </ul>
-                            </li>
-                            <li><strong>Microkernel structure:</strong> Minimal kernel with core functions; other services run in user space (e.g., Mach)
-                                <ul>
-                                    <li>✅ Advantages: Portability, security</li>
-                                    <li>❌ Disadvantages: Performance overhead due to message passing</li>
-                                </ul>
-                            </li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            Operating system structure refers to how the components of an OS are organized and how they interact with each other. The structure affects system performance, maintainability, security, and flexibility.
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">1️⃣ Monolithic Structure</div>
+                            <strong>Description:</strong> The entire operating system runs in kernel mode as a single large process. All OS services (file system, device drivers, memory management, process scheduling) are part of one large kernel with no internal structure.
+                            
+                            <div class="diagram">
+                                ┌─────────────────────────────────┐<br>
+                                │      User Applications          │<br>
+                                └────────────┬────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ System Calls<br>
+                                ┌────────────▼────────────────────┐<br>
+                                │                                 │<br>
+                                │    MONOLITHIC KERNEL            │<br>
+                                │  ┌──────────────────────────┐   │<br>
+                                │  │ File System │ Scheduler  │   │<br>
+                                │  │ Memory Mgmt │ Drivers    │   │<br>
+                                │  │ IPC │ Network │ Security │   │<br>
+                                │  └──────────────────────────┘   │<br>
+                                └─────────────┬───────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                ┌─────────────▼───────────────────┐<br>
+                                │         Hardware                │<br>
+                                └─────────────────────────────────┘<br>
+                            </div>
+
+                            <strong>Examples:</strong> Traditional UNIX, Linux (though modular), MS-DOS, early versions of Windows
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>High performance (no overhead)</td>
+                                        <td>Difficult to maintain and debug</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficient communication between components</td>
+                                        <td>Poor isolation - one bug can crash entire system</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Simple to implement initially</td>
+                                        <td>Not portable across different hardware</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Direct hardware access</td>
+                                        <td>Difficult to add new features</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">2️⃣ Layered Structure</div>
+                            <strong>Description:</strong> The OS is divided into multiple layers, each built on top of lower layers. Each layer uses functions and services of only the layers below it. Layer 0 is hardware, and the highest layer is the user interface.
+                            
+                            <div class="diagram">
+                                ┌─────────────────────────────────┐<br>
+                                │  Layer N: User Interface        │<br>
+                                ├─────────────────────────────────┤<br>
+                                │  Layer N-1: User Programs       │<br>
+                                ├─────────────────────────────────┤<br>
+                                │  Layer 3: I/O Management        │<br>
+                                ├─────────────────────────────────┤<br>
+                                │  Layer 2: Process Communication │<br>
+                                ├─────────────────────────────────┤<br>
+                                │  Layer 1: Memory Management     │<br>
+                                ├─────────────────────────────────┤<br>
+                                │  Layer 0: Hardware              │<br>
+                                └─────────────────────────────────┘<br>
+                            </div>
+
+                            <strong>Examples:</strong> THE operating system (Technische Hogeschool Eindhoven), MULTICS
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Modularity - easy to debug layer by layer</td>
+                                        <td>Performance overhead due to layer transitions</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Easy to maintain and update individual layers</td>
+                                        <td>Difficult to define layers appropriately</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Good abstraction and information hiding</td>
+                                        <td>Less efficient than monolithic</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Each layer can be tested independently</td>
+                                        <td>Careful planning required for layer design</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">3️⃣ Microkernel Structure</div>
+                            <strong>Description:</strong> Minimalist approach where the kernel contains only essential services (IPC, basic scheduling, low-level memory management). All other services (file system, device drivers, networking) run as user-space processes.
+                            
+                            <div class="diagram">
+                                ┌──────────┐ ┌──────────┐ ┌──────────┐<br>
+                                │File System│ │ Drivers  │ │ Network  │<br>
+                                └─────┬────┘ └────┬─────┘ └────┬─────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ User Space  │           │<br>
+                                ══════╪═════════════╪═══════════╪══════<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ Kernel Space│           │<br>
+                                ┌─────▼─────────────▼───────────▼─────┐<br>
+                                │      MICROKERNEL (Minimal)          │<br>
+                                │  • IPC (Message Passing)            │<br>
+                                │  • Basic Scheduling                 │<br>
+                                │  • Low-level Memory Management      │<br>
+                                └─────────────┬───────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                ┌─────────────▼───────────────────────┐<br>
+                                │           Hardware                  │<br>
+                                └─────────────────────────────────────┘<br>
+                            </div>
+
+                            <strong>Examples:</strong> Mach, QNX, MINIX, L4, Symbian OS
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Highly portable - minimal kernel code</td>
+                                        <td>Performance overhead due to message passing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>More secure - services isolated in user space</td>
+                                        <td>More complex system design</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Easy to extend - add services without kernel changes</td>
+                                        <td>Increased context switching overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Better reliability - service crash doesn't crash kernel</td>
+                                        <td>Requires efficient IPC mechanism</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="example-box">
+                            <strong>💡 Real-World Example:</strong> Modern operating systems often use hybrid approaches. For instance, Windows NT and macOS combine microkernel concepts with monolithic performance by keeping some services in kernel space while maintaining modularity.
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">3. What is an Operating System? Explain its main functions.</div>
                     <div class="answer">
-                        An <strong>Operating System</strong> is system software that manages hardware resources and provides services to application programs.
-                        <br><br><strong>Main functions:</strong>
-                        <ul>
-                            <li><strong>Process management:</strong> Create, schedule, terminate processes</li>
-                            <li><strong>Memory management:</strong> Allocate, deallocate memory</li>
-                            <li><strong>File system management:</strong> Organize, access files</li>
-                            <li><strong>Device management:</strong> Manage I/O devices</li>
-                            <li><strong>Provide user interface:</strong> CLI or GUI</li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Definition</div>
+                            An <strong>Operating System (OS)</strong> is system software that acts as an intermediary between computer hardware and user applications. It manages hardware resources, provides services to application programs, and creates an environment for users to interact with the computer efficiently and securely.
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🎯 Main Functions of Operating System</div>
+                            
+                            <strong>1. Process Management</strong>
+                            <ul>
+                                <li><strong>Process Creation & Termination:</strong> Creates new processes using system calls (fork, exec) and terminates processes when they complete or encounter errors</li>
+                                <li><strong>Process Scheduling:</strong> Decides which process gets CPU time using scheduling algorithms (FCFS, Round Robin, Priority Scheduling)</li>
+                                <li><strong>Process Synchronization:</strong> Coordinates processes to avoid race conditions using semaphores, monitors, and locks</li>
+                                <li><strong>Inter-Process Communication (IPC):</strong> Enables processes to communicate via shared memory, message passing, pipes, and sockets</li>
+                                <li><strong>Deadlock Handling:</strong> Prevents, avoids, detects, and recovers from deadlock situations</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <strong>Example:</strong> When you open multiple browser tabs, the OS creates separate processes/threads for each tab, schedules CPU time among them, and ensures they don't interfere with each other's memory.
+                            </div>
+
+                            <strong>2. Memory Management</strong>
+                            <ul>
+                                <li><strong>Memory Allocation:</strong> Allocates memory to processes when they need it and deallocates when done</li>
+                                <li><strong>Memory Protection:</strong> Ensures processes cannot access each other's memory space</li>
+                                <li><strong>Virtual Memory:</strong> Provides illusion of larger memory using disk space (paging and swapping)</li>
+                                <li><strong>Memory Mapping:</strong> Maps logical addresses to physical addresses using page tables</li>
+                                <li><strong>Cache Management:</strong> Manages CPU cache for faster memory access</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Memory Management Hierarchy:<br><br>
+                                ┌─────────────────┐<br>
+                                │  CPU Registers  │ ← Fastest<br>
+                                ├─────────────────┤<br>
+                                │   CPU Cache     │<br>
+                                ├─────────────────┤<br>
+                                │   Main Memory   │ (RAM)<br>
+                                │     (RAM)       │<br>
+                                ├─────────────────┤<br>
+                                │ Virtual Memory  │<br>
+                                │  (Disk/SSD)     │ ← Slowest<br>
+                                └─────────────────┘<br>
+                            </div>
+
+                            <strong>3. File System Management</strong>
+                            <ul>
+                                <li><strong>File Operations:</strong> Create, read, write, delete, and modify files</li>
+                                <li><strong>Directory Management:</strong> Organize files in hierarchical directory structures</li>
+                                <li><strong>Access Control:</strong> Manage file permissions (read, write, execute) for different users</li>
+                                <li><strong>File System Types:</strong> Support various file systems (NTFS, FAT32, ext4, HFS+)</li>
+                                <li><strong>Disk Space Management:</strong> Track free and used disk space, allocate space efficiently</li>
+                                <li><strong>Backup & Recovery:</strong> Provide mechanisms for data backup and recovery</li>
+                            </ul>
+
+                            <strong>4. Device Management (I/O Management)</strong>
+                            <ul>
+                                <li><strong>Device Drivers:</strong> Provide interface between hardware devices and OS</li>
+                                <li><strong>I/O Scheduling:</strong> Manage I/O requests from multiple processes efficiently</li>
+                                <li><strong>Buffering & Caching:</strong> Temporarily store data to improve I/O performance</li>
+                                <li><strong>Spooling:</strong> Handle simultaneous I/O operations (e.g., print queue)</li>
+                                <li><strong>Device Allocation:</strong> Allocate devices to processes and handle conflicts</li>
+                            </ul>
+
+                            <strong>5. User Interface</strong>
+                            <ul>
+                                <li><strong>Command-Line Interface (CLI):</strong> Text-based interface using commands (e.g., Terminal, Command Prompt)</li>
+                                <li><strong>Graphical User Interface (GUI):</strong> Visual interface with windows, icons, menus (e.g., Windows, macOS)</li>
+                                <li><strong>Touch Interface:</strong> Touch-based interaction for mobile devices</li>
+                                <li><strong>Voice Interface:</strong> Voice-activated commands (e.g., Siri, Cortana)</li>
+                            </ul>
+
+                            <strong>6. Security & Protection</strong>
+                            <ul>
+                                <li><strong>User Authentication:</strong> Verify user identity through passwords, biometrics</li>
+                                <li><strong>Access Control:</strong> Control which users can access which resources</li>
+                                <li><strong>Encryption:</strong> Protect sensitive data through encryption</li>
+                                <li><strong>Virus Protection:</strong> Detect and prevent malicious software</li>
+                                <li><strong>Firewall:</strong> Monitor and control network traffic</li>
+                            </ul>
+
+                            <strong>7. Networking</strong>
+                            <ul>
+                                <li><strong>Network Protocols:</strong> Implement TCP/IP, HTTP, FTP protocols</li>
+                                <li><strong>Network Configuration:</strong> Manage network settings and connections</li>
+                                <li><strong>Resource Sharing:</strong> Enable file and printer sharing over network</li>
+                                <li><strong>Remote Access:</strong> Allow remote login and administration</li>
+                            </ul>
+
+                            <strong>8. Error Detection & Handling</strong>
+                            <ul>
+                                <li><strong>Error Detection:</strong> Monitor for hardware and software errors</li>
+                                <li><strong>Error Logging:</strong> Maintain logs of system errors and events</li>
+                                <li><strong>Recovery Mechanisms:</strong> Attempt to recover from errors gracefully</li>
+                                <li><strong>Debugging Support:</strong> Provide tools for debugging applications</li>
+                            </ul>
+                        </div>
+
+                        <div class="diagram">
+                            OS as an Intermediary:<br><br>
+                            ┌─────────────────────────────────┐<br>
+                            │   Users & Applications          │<br>
+                            └────────────┬────────────────────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            ┌────────────▼────────────────────┐<br>
+                            │    OPERATING SYSTEM             │<br>
+                            │  • Process Management           │<br>
+                            │  • Memory Management            │<br>
+                            │  • File System                  │<br>
+                            │  • I/O Management               │<br>
+                            │  • Security                     │<br>
+                            └────────────┬────────────────────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            ┌────────────▼────────────────────┐<br>
+                            │  Hardware (CPU, Memory, Disk)   │<br>
+                            └─────────────────────────────────┘<br>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>📝 Key Point:</strong> The OS acts as a resource manager, allocating hardware resources efficiently among competing processes while ensuring security, stability, and optimal performance.
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">4. Explain processor and User modes. Describe how the user interacts with the operating system (interface).</div>
                     <div class="answer">
-                        <strong>Processor modes:</strong>
-                        <ul>
-                            <li><strong>Kernel mode:</strong> OS has full access to hardware</li>
-                            <li><strong>User mode:</strong> User programs run with restricted access</li>
-                        </ul>
-                        <br><strong>User interacts with OS via:</strong>
-                        <ul>
-                            <li><strong>Command-Line Interface (CLI):</strong> Text commands</li>
-                            <li><strong>Graphical User Interface (GUI):</strong> Visual icons, windows</li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">🔐 Processor Modes (Execution Modes)</div>
+                            
+                            Modern processors support at least two modes of operation to protect the system from malicious or erroneous programs.
+
+                            <strong>1. Kernel Mode (Supervisor/System Mode)</strong>
+                            <ul>
+                                <li><strong>Privilege Level:</strong> Highest privilege level with unrestricted access</li>
+                                <li><strong>Access Rights:</strong> Can execute all CPU instructions including privileged instructions</li>
+                                <li><strong>Memory Access:</strong> Can access all memory locations including kernel memory</li>
+                                <li><strong>Hardware Control:</strong> Direct access to hardware devices and I/O operations</li>
+                                <li><strong>Who Runs:</strong> Operating system kernel, device drivers, critical system services</li>
+                                <li><strong>Purpose:</strong> Execute critical OS functions that require direct hardware access</li>
+                            </ul>
+
+                            <strong>2. User Mode (Unprivileged Mode)</strong>
+                            <ul>
+                                <li><strong>Privilege Level:</strong> Restricted privilege level</li>
+                                <li><strong>Access Rights:</strong> Can only execute non-privileged instructions</li>
+                                <li><strong>Memory Access:</strong> Limited to allocated user memory space only</li>
+                                <li><strong>Hardware Control:</strong> No direct hardware access; must use system calls</li>
+                                <li><strong>Who Runs:</strong> User applications, programs, utilities</li>
+                                <li><strong>Purpose:</strong> Protect system from user program errors or malicious code</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Mode Transition:<br><br>
+                                ┌─────────────────────────────────┐<br>
+                                │      USER MODE                  │<br>
+                                │  (User Applications)            │<br>
+                                │  • Limited privileges           │<br>
+                                │  • Restricted memory access     │<br>
+                                └────────┬────────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ System Call<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ (Trap/Interrupt)<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                ┌─────────────────────────────────┐<br>
+                                │      KERNEL MODE                │<br>
+                                │  (Operating System)             │<br>
+                                │  • Full privileges              │<br>
+                                │  • Complete hardware access     │<br>
+                                └────────┬────────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ Return from<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ System Call<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                ┌─────────────────────────────────┐<br>
+                                │      USER MODE                  │<br>
+                                └─────────────────────────────────┘<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>Aspect</th>
+                                        <th>Kernel Mode</th>
+                                        <th>User Mode</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Privilege</td>
+                                        <td>Full access</td>
+                                        <td>Restricted access</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Instructions</td>
+                                        <td>All instructions</td>
+                                        <td>Non-privileged only</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Memory Access</td>
+                                        <td>Entire memory</td>
+                                        <td>User space only</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Crash Impact</td>
+                                        <td>System crash</td>
+                                        <td>Process crash only</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mode Bit</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="example-box">
+                                <strong>Example:</strong> When you click "Save" in a text editor (user mode), the application makes a system call to the OS (switches to kernel mode) to write data to disk. After writing, control returns to user mode.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">💻 User Interaction with Operating System</div>
+                            
+                            <strong>1. Command-Line Interface (CLI)</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Text-based interface where users type commands</li>
+                                <li><strong>Components:</strong> Shell (bash, zsh, PowerShell), command interpreter</li>
+                                <li><strong>Advantages:</strong>
+                                    <ul>
+                                        <li>Powerful and flexible for advanced users</li>
+                                        <li>Efficient for repetitive tasks (scripting)</li>
+                                        <li>Low resource consumption</li>
+                                        <li>Remote access friendly (SSH)</li>
+                                        <li>Automation through scripts</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Disadvantages:</strong>
+                                    <ul>
+                                        <li>Steep learning curve</li>
+                                        <li>Requires memorizing commands</li>
+                                        <li>Not intuitive for beginners</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Examples:</strong> Linux Terminal, Windows Command Prompt, macOS Terminal</li>
+                            </ul>
+
+                            <div class="code-block">
+# CLI Examples:
+$ ls -la                    # List files
+$ cd /home/user/documents   # Change directory
+$ cp file1.txt file2.txt    # Copy file
+$ sudo apt update           # Update packages (Linux)
+                            </div>
+
+                            <strong>2. Graphical User Interface (GUI)</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Visual interface with windows, icons, menus, and pointers (WIMP)</li>
+                                <li><strong>Components:</strong> Windows, icons, buttons, menus, dialog boxes, toolbars</li>
+                                <li><strong>Advantages:</strong>
+                                    <ul>
+                                        <li>User-friendly and intuitive</li>
+                                        <li>Easy to learn for beginners</li>
+                                        <li>Visual feedback</li>
+                                        <li>Multitasking with multiple windows</li>
+                                        <li>Point-and-click simplicity</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Disadvantages:</strong>
+                                    <ul>
+                                        <li>Higher resource consumption (CPU, memory)</li>
+                                        <li>Slower for repetitive tasks</li>
+                                        <li>Limited automation capabilities</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Examples:</strong> Windows Desktop, macOS Finder, GNOME (Linux), KDE</li>
+                            </ul>
+
+                            <strong>3. Touch Interface</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Direct manipulation using touch gestures</li>
+                                <li><strong>Gestures:</strong> Tap, swipe, pinch, zoom, long press</li>
+                                <li><strong>Use Cases:</strong> Smartphones, tablets, touchscreen laptops</li>
+                                <li><strong>Examples:</strong> iOS, Android, Windows 10/11 touch mode</li>
+                            </ul>
+
+                            <strong>4. Voice Interface</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Voice-activated commands and natural language processing</li>
+                                <li><strong>Features:</strong> Speech recognition, voice commands, conversational AI</li>
+                                <li><strong>Examples:</strong> Siri (macOS/iOS), Cortana (Windows), Google Assistant</li>
+                            </ul>
+
+                            <strong>5. Menu-Driven Interface</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Navigate through hierarchical menus</li>
+                                <li><strong>Use Cases:</strong> ATMs, kiosks, embedded systems</li>
+                                <li><strong>Advantages:</strong> Simple, limited options reduce errors</li>
+                            </ul>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🔄 System Call Mechanism</div>
+                            
+                            System calls are the interface between user programs and the OS kernel:
+                            
+                            <div class="diagram">
+                                System Call Flow:<br><br>
+                                1. User Program (User Mode)<br>
+                                &nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;▼<br>
+                                2. Library Function Call (e.g., printf)<br>
+                                &nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;▼<br>
+                                3. System Call Interface (Trap)<br>
+                                &nbsp;&nbsp;&nbsp;│ Mode Switch: User → Kernel<br>
+                                &nbsp;&nbsp;&nbsp;▼<br>
+                                4. Kernel Executes Request<br>
+                                &nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;▼<br>
+                                5. Return to User Mode<br>
+                                &nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;▼<br>
+                                6. User Program Continues<br>
+                            </div>
+
+                            <strong>Types of System Calls:</strong>
+                            <ul>
+                                <li><strong>Process Control:</strong> fork(), exec(), exit(), wait()</li>
+                                <li><strong>File Management:</strong> open(), read(), write(), close()</li>
+                                <li><strong>Device Management:</strong> ioctl(), read(), write()</li>
+                                <li><strong>Information Maintenance:</strong> getpid(), alarm(), sleep()</li>
+                                <li><strong>Communication:</strong> pipe(), shmget(), mmap()</li>
+                            </ul>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>📝 Security Note:</strong> The dual-mode operation (user/kernel) is fundamental to OS security. It prevents user programs from directly accessing hardware or interfering with other processes, ensuring system stability and security.
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">5. Explain the different types of file operations performed by an operating system.</div>
                     <div class="answer">
-                        Common file operations:
-                        <ul>
-                            <li><strong>Create:</strong> Allocate space and entry in directory</li>
-                            <li><strong>Open:</strong> Load file attributes into memory</li>
-                            <li><strong>Read/Write:</strong> Transfer data between file and process memory</li>
-                            <li><strong>Close:</strong> Release file resources</li>
-                            <li><strong>Delete:</strong> Remove file entry and free space</li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            File operations are fundamental services provided by the operating system to manage data stored on secondary storage devices. These operations allow users and applications to create, manipulate, and organize files efficiently.
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">📁 Major File Operations</div>
+                            
+                            <strong>1. Create (File Creation)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Allocate space for a new file in the file system</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Find free space on disk</li>
+                                        <li>Create entry in directory structure</li>
+                                        <li>Allocate initial disk blocks</li>
+                                        <li>Initialize file attributes (name, size, permissions, timestamps)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> create(), creat(), open() with O_CREAT flag</li>
+                                <li><strong>Example:</strong> Creating a new document in a word processor</li>
+                            </ul>
+
+                            <strong>2. Open (File Opening)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Prepare file for reading or writing operations</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Search directory for file name</li>
+                                        <li>Load file attributes into memory (File Control Block)</li>
+                                        <li>Create file descriptor/handle</li>
+                                        <li>Set file pointer to beginning (or specified position)</li>
+                                        <li>Check access permissions</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Modes:</strong> Read-only, Write-only, Read-Write, Append</li>
+                                <li><strong>System Call:</strong> open(), fopen()</li>
+                                <li><strong>Returns:</strong> File descriptor (integer) or file pointer</li>
+                            </ul>
+
+                            <strong>3. Read (Reading Data)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Transfer data from file to process memory</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Use file pointer to locate current position</li>
+                                        <li>Read specified number of bytes</li>
+                                        <li>Transfer data to buffer in process memory</li>
+                                        <li>Update file pointer to next position</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> read(), fread(), fscanf()</li>
+                                <li><strong>Parameters:</strong> File descriptor, buffer, number of bytes</li>
+                            </ul>
+
+                            <strong>4. Write (Writing Data)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Transfer data from process memory to file</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Use file pointer to locate write position</li>
+                                        <li>Write data from buffer to disk</li>
+                                        <li>Update file size if necessary</li>
+                                        <li>Update file pointer</li>
+                                        <li>Modify timestamp (last modified)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> write(), fwrite(), fprintf()</li>
+                                <li><strong>Modes:</strong> Overwrite, Append, Insert</li>
+                            </ul>
+
+                            <strong>5. Close (File Closing)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Release file resources and finalize operations</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Flush any buffered data to disk</li>
+                                        <li>Update file attributes (size, timestamps)</li>
+                                        <li>Release file descriptor</li>
+                                        <li>Remove entry from open file table</li>
+                                        <li>Free memory allocated for file operations</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> close(), fclose()</li>
+                                <li><strong>Importance:</strong> Prevents data loss and resource leaks</li>
+                            </ul>
+
+                            <strong>6. Delete (File Deletion)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Remove file from file system</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Search directory for file</li>
+                                        <li>Check if file is currently open</li>
+                                        <li>Remove directory entry</li>
+                                        <li>Mark disk blocks as free</li>
+                                        <li>Update free space list</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> unlink(), remove(), delete()</li>
+                                <li><strong>Note:</strong> Some systems move to recycle bin instead of immediate deletion</li>
+                            </ul>
+
+                            <strong>7. Seek (Repositioning File Pointer)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Move file pointer to specific location</li>
+                                <li><strong>Modes:</strong>
+                                    <ul>
+                                        <li>SEEK_SET: From beginning of file</li>
+                                        <li>SEEK_CUR: From current position</li>
+                                        <li>SEEK_END: From end of file</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> lseek(), fseek()</li>
+                                <li><strong>Use Case:</strong> Random access to file data</li>
+                            </ul>
+
+                            <strong>8. Rename (File Renaming)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Change file name or move to different directory</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Update directory entry with new name</li>
+                                        <li>Maintain same inode/file content</li>
+                                        <li>Update timestamps</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> rename(), mv</li>
+                            </ul>
+
+                            <strong>9. Truncate (File Truncation)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Reduce file size, delete content</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Release disk blocks beyond specified size</li>
+                                        <li>Update file size attribute</li>
+                                        <li>Keep file structure intact</li>
+                                    </ul>
+                                </li>
+                                <li><strong>System Call:</strong> truncate(), ftruncate()</li>
+                            </ul>
+
+                            <strong>10. Append (Appending Data)</strong>
+                            <ul>
+                                <li><strong>Purpose:</strong> Add data to end of file</li>
+                                <li><strong>Process:</strong>
+                                    <ul>
+                                        <li>Position file pointer at end</li>
+                                        <li>Write new data</li>
+                                        <li>Update file size</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Mode:</strong> Open with O_APPEND flag</li>
+                                <li><strong>Use Case:</strong> Log files, journals</li>
+                            </ul>
+                        </div>
+
+                        <div class="diagram">
+                            File Operation Lifecycle:<br><br>
+                            ┌──────────┐<br>
+                            │  CREATE  │ ← New file<br>
+                            └────┬─────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            ┌────▼─────┐<br>
+                            │   OPEN   │ ← Get file descriptor<br>
+                            └────┬─────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            ┌────▼─────┐<br>
+                            │READ/WRITE│ ← Data operations<br>
+                            │  SEEK    │<br>
+                            └────┬─────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            ┌────▼─────┐<br>
+                            │  CLOSE   │ ← Release resources<br>
+                            └────┬─────┘<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                            ┌────▼─────┐<br>
+                            │ DELETE   │ ← Optional: Remove file<br>
+                            └──────────┘<br>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🔐 File Attributes & Metadata Operations</div>
+                            <ul>
+                                <li><strong>Get Attributes:</strong> stat(), fstat() - retrieve file size, permissions, timestamps</li>
+                                <li><strong>Set Permissions:</strong> chmod() - change read/write/execute permissions</li>
+                                <li><strong>Change Owner:</strong> chown() - change file ownership</li>
+                                <li><strong>Get/Set Times:</strong> utime() - modify access and modification times</li>
+                            </ul>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>Operation</th>
+                                    <th>System Call</th>
+                                    <th>Purpose</th>
+                                </tr>
+                                <tr>
+                                    <td>Create</td>
+                                    <td>create(), creat()</td>
+                                    <td>Make new file</td>
+                                </tr>
+                                <tr>
+                                    <td>Open</td>
+                                    <td>open(), fopen()</td>
+                                    <td>Prepare for I/O</td>
+                                </tr>
+                                <tr>
+                                    <td>Read</td>
+                                    <td>read(), fread()</td>
+                                    <td>Get data from file</td>
+                                </tr>
+                                <tr>
+                                    <td>Write</td>
+                                    <td>write(), fwrite()</td>
+                                    <td>Put data to file</td>
+                                </tr>
+                                <tr>
+                                    <td>Close</td>
+                                    <td>close(), fclose()</td>
+                                    <td>Release resources</td>
+                                </tr>
+                                <tr>
+                                    <td>Delete</td>
+                                    <td>unlink(), remove()</td>
+                                    <td>Remove file</td>
+                                </tr>
+                                <tr>
+                                    <td>Seek</td>
+                                    <td>lseek(), fseek()</td>
+                                    <td>Reposition pointer</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="example-box">
+                            <strong>💡 Practical Example - Reading a File:</strong>
+                            <div class="code-block">
+// C Program Example
+int fd = open("data.txt", O_RDONLY);  // Open file
+if (fd < 0) {
+    perror("Error opening file");
+    return -1;
+}
+
+char buffer[100];
+int bytes_read = read(fd, buffer, 100);  // Read data
+
+close(fd);  // Close file
+                            </div>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>📝 Important:</strong> Always close files after operations to prevent resource leaks and ensure data integrity. Unclosed files can lead to data loss and system resource exhaustion.
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">6. Explain various types of cyber attacks in operating systems.</div>
                     <div class="answer">
-                        Common OS-related cyber attacks:
-                        <ul>
-                            <li><strong>Malware:</strong> Malicious software (viruses, worms)</li>
-                            <li><strong>Buffer overflow:</strong> Overwriting memory to execute code</li>
-                            <li><strong>Privilege escalation:</strong> Gaining higher access rights</li>
-                            <li><strong>Denial of Service (DoS):</strong> Overwhelming OS resources</li>
-                            <li><strong>Rootkit:</strong> Hiding malicious processes</li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            Cyber attacks on operating systems exploit vulnerabilities in OS design, implementation, or configuration to gain unauthorized access, steal data, disrupt services, or cause damage. Understanding these attacks is crucial for implementing effective security measures.
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🦠 Types of Cyber Attacks</div>
+                            
+                            <strong>1. Malware Attacks</strong>
+                            
+                            <div class="subsection-title">a) Viruses</div>
+                            <ul>
+                                <li><strong>Description:</strong> Malicious code that attaches to legitimate programs and replicates when executed</li>
+                                <li><strong>Behavior:</strong> Spreads by infecting other files, requires host program to run</li>
+                                <li><strong>Types:</strong> Boot sector virus, File infector, Macro virus, Polymorphic virus</li>
+                                <li><strong>Impact:</strong> Data corruption, system slowdown, file deletion</li>
+                                <li><strong>Example:</strong> ILOVEYOU virus, Melissa virus</li>
+                            </ul>
+
+                            <div class="subsection-title">b) Worms</div>
+                            <ul>
+                                <li><strong>Description:</strong> Self-replicating malware that spreads across networks without user intervention</li>
+                                <li><strong>Behavior:</strong> Exploits network vulnerabilities, doesn't need host program</li>
+                                <li><strong>Propagation:</strong> Email, network shares, security holes</li>
+                                <li><strong>Impact:</strong> Network congestion, system crashes, data theft</li>
+                                <li><strong>Example:</strong> WannaCry, Conficker, Morris Worm</li>
+                            </ul>
+
+                            <div class="subsection-title">c) Trojans</div>
+                            <ul>
+                                <li><strong>Description:</strong> Malicious software disguised as legitimate programs</li>
+                                <li><strong>Behavior:</strong> Appears harmless but performs malicious actions in background</li>
+                                <li><strong>Types:</strong> Backdoor, Downloader, Banker, Ransomware</li>
+                                <li><strong>Impact:</strong> Data theft, remote access, system compromise</li>
+                                <li><strong>Example:</strong> Zeus, Emotet</li>
+                            </ul>
+
+                            <div class="subsection-title">d) Ransomware</div>
+                            <ul>
+                                <li><strong>Description:</strong> Encrypts user files and demands payment for decryption key</li>
+                                <li><strong>Behavior:</strong> Locks files, displays ransom message</li>
+                                <li><strong>Impact:</strong> Data loss, financial loss, business disruption</li>
+                                <li><strong>Example:</strong> WannaCry, Petya, CryptoLocker</li>
+                            </ul>
+
+                            <div class="subsection-title">e) Spyware</div>
+                            <ul>
+                                <li><strong>Description:</strong> Secretly monitors user activity and collects information</li>
+                                <li><strong>Data Collected:</strong> Keystrokes, browsing history, passwords, personal data</li>
+                                <li><strong>Impact:</strong> Privacy violation, identity theft</li>
+                                <li><strong>Example:</strong> Keyloggers, screen capture tools</li>
+                            </ul>
+
+                            <strong>2. Buffer Overflow Attacks</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Exploit programs that don't properly check input size, overwriting adjacent memory</li>
+                                <li><strong>Mechanism:</strong>
+                                    <ul>
+                                        <li>Send more data than buffer can hold</li>
+                                        <li>Overflow overwrites return address on stack</li>
+                                        <li>Redirect execution to malicious code</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Types:</strong> Stack-based, Heap-based</li>
+                                <li><strong>Impact:</strong> Code execution, privilege escalation, system crash</li>
+                                <li><strong>Prevention:</strong> Input validation, stack canaries, ASLR (Address Space Layout Randomization)</li>
+                            </ul>
+
+                            <div class="code-block">
+// Vulnerable Code Example
+void vulnerable_function(char *input) {
+    char buffer[10];
+    strcpy(buffer, input);  // No bounds checking!
+    // If input > 10 bytes, buffer overflow occurs
+}
+                            </div>
+
+                            <strong>3. Privilege Escalation</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Gaining higher access rights than originally granted</li>
+                                <li><strong>Types:</strong>
+                                    <ul>
+                                        <li><strong>Vertical:</strong> User gains admin/root privileges</li>
+                                        <li><strong>Horizontal:</strong> User accesses another user's resources</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Methods:</strong>
+                                    <ul>
+                                        <li>Exploiting SUID/SGID programs</li>
+                                        <li>Kernel vulnerabilities</li>
+                                        <li>Misconfigured permissions</li>
+                                        <li>DLL hijacking</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Impact:</strong> Complete system compromise, data access, malware installation</li>
+                            </ul>
+
+                            <strong>4. Denial of Service (DoS) Attacks</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Overwhelm system resources making services unavailable</li>
+                                <li><strong>Types:</strong>
+                                    <ul>
+                                        <li><strong>Network DoS:</strong> Flood with network packets (SYN flood, UDP flood)</li>
+                                        <li><strong>Application DoS:</strong> Exploit application vulnerabilities</li>
+                                        <li><strong>DDoS:</strong> Distributed attack from multiple sources</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Targets:</strong> CPU, memory, disk I/O, network bandwidth</li>
+                                <li><strong>Impact:</strong> Service unavailability, financial loss, reputation damage</li>
+                                <li><strong>Example:</strong> Ping of Death, Smurf attack, Slowloris</li>
+                            </ul>
+
+                            <strong>5. Rootkit Attacks</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Malware that hides its presence and provides backdoor access</li>
+                                <li><strong>Types:</strong>
+                                    <ul>
+                                        <li><strong>User-mode:</strong> Runs in user space, easier to detect</li>
+                                        <li><strong>Kernel-mode:</strong> Runs in kernel, very difficult to detect</li>
+                                        <li><strong>Bootkit:</strong> Infects boot sector, loads before OS</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Capabilities:</strong>
+                                    <ul>
+                                        <li>Hide processes, files, network connections</li>
+                                        <li>Intercept system calls</li>
+                                        <li>Provide remote access</li>
+                                        <li>Disable security software</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Impact:</strong> Complete system compromise, persistent access</li>
+                                <li><strong>Detection:</strong> Very difficult; requires specialized tools</li>
+                            </ul>
+
+                            <strong>6. Man-in-the-Middle (MITM) Attacks</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Attacker intercepts communication between two parties</li>
+                                <li><strong>Methods:</strong> ARP spoofing, DNS spoofing, session hijacking</li>
+                                <li><strong>Impact:</strong> Data theft, credential stealing, communication manipulation</li>
+                                <li><strong>Prevention:</strong> Encryption (SSL/TLS), VPN, certificate validation</li>
+                            </ul>
+
+                            <strong>7. SQL Injection (Database Attacks)</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Inject malicious SQL code through input fields</li>
+                                <li><strong>Impact:</strong> Database access, data theft, data modification</li>
+                                <li><strong>Prevention:</strong> Parameterized queries, input validation</li>
+                            </ul>
+
+                            <strong>8. Zero-Day Exploits</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Attacks exploiting unknown vulnerabilities</li>
+                                <li><strong>Danger:</strong> No patch available, difficult to defend</li>
+                                <li><strong>Impact:</strong> Varies based on vulnerability</li>
+                                <li><strong>Defense:</strong> Intrusion detection, behavior analysis, sandboxing</li>
+                            </ul>
+
+                            <strong>9. Social Engineering Attacks</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Manipulate users to reveal sensitive information</li>
+                                <li><strong>Types:</strong> Phishing, pretexting, baiting, tailgating</li>
+                                <li><strong>Impact:</strong> Credential theft, malware installation</li>
+                                <li><strong>Prevention:</strong> User education, awareness training</li>
+                            </ul>
+
+                            <strong>10. Advanced Persistent Threats (APT)</strong>
+                            <ul>
+                                <li><strong>Description:</strong> Long-term targeted attacks by sophisticated attackers</li>
+                                <li><strong>Characteristics:</strong> Stealthy, persistent, well-funded</li>
+                                <li><strong>Phases:</strong> Reconnaissance, initial compromise, establish foothold, escalate privileges, lateral movement, data exfiltration</li>
+                                <li><strong>Impact:</strong> Massive data breaches, espionage</li>
+                            </ul>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>Attack Type</th>
+                                    <th>Target</th>
+                                    <th>Primary Impact</th>
+                                    <th>Defense</th>
+                                </tr>
+                                <tr>
+                                    <td>Malware</td>
+                                    <td>Files, System</td>
+                                    <td>Data loss, System damage</td>
+                                    <td>Antivirus, Updates</td>
+                                </tr>
+                                <tr>
+                                    <td>Buffer Overflow</td>
+                                    <td>Memory</td>
+                                    <td>Code execution</td>
+                                    <td>Input validation, ASLR</td>
+                                </tr>
+                                <tr>
+                                    <td>Privilege Escalation</td>
+                                    <td>Access Control</td>
+                                    <td>Unauthorized access</td>
+                                    <td>Least privilege, Patching</td>
+                                </tr>
+                                <tr>
+                                    <td>DoS/DDoS</td>
+                                    <td>Resources</td>
+                                    <td>Service unavailability</td>
+                                    <td>Rate limiting, Firewalls</td>
+                                </tr>
+                                <tr>
+                                    <td>Rootkit</td>
+                                    <td>Kernel</td>
+                                    <td>Hidden compromise</td>
+                                    <td>Secure boot, Integrity checks</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🛡️ Defense Mechanisms</div>
+                            <ul>
+                                <li><strong>Regular Updates:</strong> Apply security patches promptly</li>
+                                <li><strong>Antivirus/Antimalware:</strong> Real-time protection and scanning</li>
+                                <li><strong>Firewall:</strong> Control network traffic</li>
+                                <li><strong>Access Control:</strong> Implement least privilege principle</li>
+                                <li><strong>Encryption:</strong> Protect data at rest and in transit</li>
+                                <li><strong>Intrusion Detection:</strong> Monitor for suspicious activity</li>
+                                <li><strong>User Education:</strong> Train users on security best practices</li>
+                                <li><strong>Backup:</strong> Regular backups for disaster recovery</li>
+                            </ul>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>⚠️ Security Best Practice:</strong> Defense in depth - use multiple layers of security controls. No single defense mechanism is perfect; combining multiple strategies provides better protection.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -445,54 +1477,1133 @@
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">1. Explain different types of Operating Systems with suitable examples.</div>
                     <div class="answer">
-                        <ul>
-                            <li><strong>Batch Operating System:</strong> Executes batch jobs, no user interaction (e.g., payroll processing)</li>
-                            <li><strong>Time-Sharing Operating System:</strong> Multiple users share CPU, interactive (e.g., UNIX)</li>
-                            <li><strong>Distributed Operating System:</strong> Manages distributed resources, networked systems (e.g., cloud computing)</li>
-                            <li><strong>Real-Time Operating System:</strong> Predictable response time, critical applications (e.g., embedded systems)</li>
-                            <li><strong>Network Operating System:</strong> Manages network resources, provides services (e.g., Windows Server)</li>
-                            <li><strong>Mobile Operating System:</strong> Designed for mobile devices, touch interface (e.g., Android, iOS)</li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            Operating systems can be classified based on various criteria such as processing method, number of users, response time requirements, and distribution of resources. Each type is designed for specific use cases and environments.
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">1️⃣ Batch Operating System</div>
+                            
+                            <strong>Description:</strong> Jobs are collected in batches and executed sequentially without user interaction. The OS processes one batch at a time.
+                            
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li>No direct interaction between user and computer</li>
+                                <li>Jobs are grouped based on similar requirements</li>
+                                <li>Operator collects jobs and submits to computer</li>
+                                <li>Sequential execution of jobs</li>
+                                <li>Efficient for repetitive tasks</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Batch Processing Flow:<br><br>
+                                ┌──────────┐&nbsp;&nbsp;&nbsp;┌──────────┐&nbsp;&nbsp;&nbsp;┌──────────┐<br>
+                                │  Job 1   │&nbsp;&nbsp;&nbsp;│  Job 2   │&nbsp;&nbsp;&nbsp;│  Job 3   │<br>
+                                └────┬─────┘&nbsp;&nbsp;&nbsp;└────┬─────┘&nbsp;&nbsp;&nbsp;└────┬─────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                ┌─────────────────────────────────────┐<br>
+                                │         Batch Queue                 │<br>
+                                └────────────┬────────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                ┌────────────▼────────────────────────┐<br>
+                                │    Process Jobs Sequentially        │<br>
+                                └────────────┬────────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                ┌────────────▼────────────────────────┐<br>
+                                │         Output Results              │<br>
+                                └─────────────────────────────────────┘<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>High throughput for large jobs</td>
+                                        <td>No user interaction during execution</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficient CPU utilization</td>
+                                        <td>Long turnaround time</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Automatic job scheduling</td>
+                                        <td>Difficult to debug</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Reduced idle time</td>
+                                        <td>Job prioritization issues</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Examples:</strong> Payroll processing, Bank statement generation, Billing systems, IBM's OS/360, Early mainframe systems
+
+                            <div class="example-box">
+                                <strong>Use Case:</strong> A bank processes thousands of transactions at night in batches - all deposits together, then all withdrawals, then interest calculations.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">2️⃣ Time-Sharing Operating System (Multitasking)</div>
+                            
+                            <strong>Description:</strong> Multiple users share CPU time through rapid switching, giving illusion of simultaneous execution. Each user gets a time slice (quantum).
+                            
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li>Multiple users can access system simultaneously</li>
+                                <li>CPU switches rapidly between processes (context switching)</li>
+                                <li>Interactive system with quick response time</li>
+                                <li>Time quantum typically 10-100 milliseconds</li>
+                                <li>Round-robin or priority-based scheduling</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Time-Sharing Concept:<br><br>
+                                User 1 ──┐<br>
+                                User 2 ──┼──► ┌─────────────────┐<br>
+                                User 3 ──┤&nbsp;&nbsp;&nbsp;&nbsp;│  CPU Scheduler  │<br>
+                                User 4 ──┘&nbsp;&nbsp;&nbsp;&nbsp;└────────┬────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                Time: ──U1──U2──U3──U4──U1──U2──U3──U4──►<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Each gets time slice)<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Quick response time</td>
+                                        <td>Context switching overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Multiple users simultaneously</td>
+                                        <td>Security and privacy concerns</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Better CPU utilization</td>
+                                        <td>Complex scheduling algorithms</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Resource sharing</td>
+                                        <td>Requires more memory</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Examples:</strong> UNIX, Linux, Windows (modern versions), macOS, Multics
+
+                            <div class="example-box">
+                                <strong>Use Case:</strong> University computer lab where 50 students simultaneously use the same server for programming, each feeling like they have dedicated access.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">3️⃣ Distributed Operating System</div>
+                            
+                            <strong>Description:</strong> Manages a collection of independent computers and makes them appear as a single coherent system to users.
+                            
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li>Multiple autonomous computers connected via network</li>
+                                <li>Transparent resource sharing</li>
+                                <li>Load balancing across machines</li>
+                                <li>Fault tolerance and reliability</li>
+                                <li>Scalability - easy to add more machines</li>
+                                <li>No single point of failure</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Distributed System Architecture:<br><br>
+                                ┌──────────┐&nbsp;&nbsp;&nbsp;┌──────────┐&nbsp;&nbsp;&nbsp;┌──────────┐<br>
+                                │Computer 1│◄──┤ Network  │──►│Computer 3│<br>
+                                └──────────┘&nbsp;&nbsp;&nbsp;│  Switch  │&nbsp;&nbsp;&nbsp;└──────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└────┬─────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌──────▼───┐<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│Computer 2│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──────────┘<br>
+                                <br>
+                                All appear as ONE system to users<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Resource sharing across network</td>
+                                        <td>Complex to design and implement</td>
+                                    </tr>
+                                    <tr>
+                                        <td>High reliability and availability</td>
+                                        <td>Network dependency</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Scalable - add more nodes easily</td>
+                                        <td>Security challenges</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Load balancing</td>
+                                        <td>Communication overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cost-effective (use commodity hardware)</td>
+                                        <td>Synchronization issues</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Examples:</strong> Google's infrastructure, Amazon AWS, Apache Hadoop, Amoeba, Plan 9, Cloud computing platforms
+
+                            <div class="example-box">
+                                <strong>Use Case:</strong> Google Search uses thousands of distributed servers worldwide to process search queries, with users unaware of which specific servers handle their requests.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">4️⃣ Real-Time Operating System (RTOS)</div>
+                            
+                            <strong>Description:</strong> Designed to process data and events within strict time constraints. Response time is critical and predictable.
+                            
+                            <strong>Types:</strong>
+                            <ul>
+                                <li><strong>Hard Real-Time:</strong> Missing deadline is catastrophic (e.g., airbag deployment, nuclear reactor control)</li>
+                                <li><strong>Soft Real-Time:</strong> Missing deadline is undesirable but tolerable (e.g., video streaming, online gaming)</li>
+                            </ul>
+
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li>Deterministic behavior - predictable response times</li>
+                                <li>Priority-based preemptive scheduling</li>
+                                <li>Minimal interrupt latency</li>
+                                <li>Fast context switching</li>
+                                <li>Time constraints are critical</li>
+                                <li>Often used in embedded systems</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Real-Time Task Execution:<br><br>
+                                Event Occurs → Interrupt → Process → Response<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MUST be within<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deadline!<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Predictable and deterministic</td>
+                                        <td>Limited task flexibility</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fast response to events</td>
+                                        <td>Complex to design</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficient resource utilization</td>
+                                        <td>Expensive development</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Reliable for critical applications</td>
+                                        <td>Limited multitasking</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Examples:</strong> VxWorks, QNX, FreeRTOS, RTLinux, Embedded systems in cars, medical devices, industrial control
+
+                            <div class="example-box">
+                                <strong>Use Case:</strong> Car airbag system must detect collision and deploy airbag within milliseconds - any delay could be fatal.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">5️⃣ Network Operating System (NOS)</div>
+                            
+                            <strong>Description:</strong> Provides networking capabilities, allowing computers to communicate and share resources over a network.
+                            
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li>Centralized server management</li>
+                                <li>File and printer sharing</li>
+                                <li>User authentication and authorization</li>
+                                <li>Network protocol support (TCP/IP, etc.)</li>
+                                <li>Remote access capabilities</li>
+                                <li>Network security features</li>
+                            </ul>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Centralized resource management</td>
+                                        <td>Server dependency</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Easy resource sharing</td>
+                                        <td>High cost</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Better security</td>
+                                        <td>Requires skilled administrators</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Centralized backup</td>
+                                        <td>Network traffic overhead</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Examples:</strong> Windows Server, Novell NetWare, Linux servers, UNIX servers
+
+                            <div class="example-box">
+                                <strong>Use Case:</strong> Office environment where employees access shared files, printers, and applications from a central server.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">6️⃣ Mobile Operating System</div>
+                            
+                            <strong>Description:</strong> Designed specifically for mobile devices like smartphones and tablets, optimized for touch interfaces and battery life.
+                            
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li>Touch-based user interface</li>
+                                <li>Power management for battery efficiency</li>
+                                <li>Mobile connectivity (cellular, WiFi, Bluetooth)</li>
+                                <li>App ecosystem and app stores</li>
+                                <li>Sensors integration (GPS, accelerometer, camera)</li>
+                                <li>Lightweight and optimized for mobile hardware</li>
+                            </ul>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Optimized for mobile hardware</td>
+                                        <td>Limited multitasking</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Touch-friendly interface</td>
+                                        <td>Less powerful than desktop OS</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Power efficient</td>
+                                        <td>App ecosystem dependency</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Portable and convenient</td>
+                                        <td>Security vulnerabilities</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Examples:</strong> Android, iOS, HarmonyOS, KaiOS
+
+                            <div class="example-box">
+                                <strong>Use Case:</strong> Smartphones running Android or iOS, allowing users to make calls, browse internet, use apps, and access services on-the-go.
+                            </div>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>📝 Summary:</strong> Different types of operating systems are designed for specific purposes. Batch systems for bulk processing, time-sharing for interactive multi-user environments, distributed for networked resources, real-time for time-critical applications, network OS for server management, and mobile OS for portable devices.
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">2. Explain the First Come First Serve (FCFS) scheduling algorithm. Write its algorithm statement and illustrate it with an example.</div>
                     <div class="answer">
-                        <strong>FCFS Algorithm:</strong> Execute processes in arrival order
-                        <div class="code-block">
-Algorithm:
-1. Process arrives, add to ready queue
-2. CPU executes process until completion
-3. Repeat for next process in queue
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            First Come First Serve (FCFS) is the simplest CPU scheduling algorithm where processes are executed in the order they arrive in the ready queue. It follows a non-preemptive approach, meaning once a process starts execution, it runs to completion.
                         </div>
-                        <strong>Example:</strong> Processes P1, P2, P3 arrive at 0, 2, 4 ms
-                        <div class="diagram">
-                            P1: 0-5 ms<br>
-                            P2: 5-8 ms<br>
-                            P3: 8-10 ms
+
+                        <div class="subsection">
+                            <div class="subsection-title">🔍 Algorithm Description</div>
+                            
+                            <strong>Working Principle:</strong>
+                            <ul>
+                                <li>Processes are arranged in a queue based on arrival time</li>
+                                <li>CPU is allocated to the first process in the queue</li>
+                                <li>Process executes until completion (non-preemptive)</li>
+                                <li>Next process in queue gets CPU after current process finishes</li>
+                                <li>Similar to a queue at a ticket counter - first person gets served first</li>
+                            </ul>
+
+                            <strong>Implementation:</strong>
+                            <ul>
+                                <li>Uses FIFO (First In First Out) queue data structure</li>
+                                <li>Simple to implement using linked list or array</li>
+                                <li>No complex calculations required</li>
+                            </ul>
                         </div>
-                        <ul>
-                            <li>✅ <strong>Advantages:</strong> Simple, easy to implement</li>
-                            <li>❌ <strong>Disadvantages:</strong> Non-preemptive, may lead to poor performance</li>
-                        </ul>
+
+                        <div class="subsection">
+                            <div class="subsection-title">📝 Algorithm Statement</div>
+                            
+                            <div class="code-block">
+FCFS Scheduling Algorithm:
+
+1. START
+
+2. Initialize:
+   - Ready Queue (empty)
+   - Current Time = 0
+   - Gantt Chart (empty)
+
+3. Input:
+   - Number of processes (n)
+   - For each process i (i = 1 to n):
+       * Process ID
+       * Arrival Time (AT)
+       * Burst Time (BT)
+
+4. Sort processes by Arrival Time (ascending order)
+
+5. For each process in sorted order:
+   a. If Current Time < Arrival Time:
+      - Current Time = Arrival Time
+      - (CPU idle until process arrives)
+   
+   b. Start Time = Current Time
+   
+   c. Execute process for its Burst Time
+   
+   d. Completion Time = Current Time + Burst Time
+   
+   e. Turnaround Time = Completion Time - Arrival Time
+   
+   f. Waiting Time = Turnaround Time - Burst Time
+   
+   g. Current Time = Completion Time
+   
+   h. Add to Gantt Chart
+
+6. Calculate Average:
+   - Average Waiting Time = Sum of all Waiting Times / n
+   - Average Turnaround Time = Sum of all Turnaround Times / n
+
+7. Display:
+   - Gantt Chart
+   - Process details (AT, BT, CT, TAT, WT)
+   - Average times
+
+8. END
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">💡 Detailed Example</div>
+                            
+                            <strong>Given Processes:</strong>
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>Arrival Time (AT)</th>
+                                        <th>Burst Time (BT)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>P1</td>
+                                        <td>0</td>
+                                        <td>4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P2</td>
+                                        <td>1</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P3</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P4</td>
+                                        <td>3</td>
+                                        <td>5</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Step-by-Step Execution:</strong>
+
+                            <strong>Step 1: P1 arrives at time 0</strong>
+                            <ul>
+                                <li>Start Time = 0</li>
+                                <li>Completion Time = 0 + 4 = 4</li>
+                                <li>Turnaround Time = 4 - 0 = 4</li>
+                                <li>Waiting Time = 4 - 4 = 0</li>
+                            </ul>
+
+                            <strong>Step 2: P2 executes after P1</strong>
+                            <ul>
+                                <li>Start Time = 4</li>
+                                <li>Completion Time = 4 + 3 = 7</li>
+                                <li>Turnaround Time = 7 - 1 = 6</li>
+                                <li>Waiting Time = 6 - 3 = 3</li>
+                            </ul>
+
+                            <strong>Step 3: P3 executes after P2</strong>
+                            <ul>
+                                <li>Start Time = 7</li>
+                                <li>Completion Time = 7 + 1 = 8</li>
+                                <li>Turnaround Time = 8 - 2 = 6</li>
+                                <li>Waiting Time = 6 - 1 = 5</li>
+                            </ul>
+
+                            <strong>Step 4: P4 executes after P3</strong>
+                            <ul>
+                                <li>Start Time = 8</li>
+                                <li>Completion Time = 8 + 5 = 13</li>
+                                <li>Turnaround Time = 13 - 3 = 10</li>
+                                <li>Waiting Time = 10 - 5 = 5</li>
+                            </ul>
+
+                            <div class="diagram">
+                                <strong>Gantt Chart:</strong><br><br>
+                                ┌────────┬─────────┬────┬──────────────┐<br>
+                                │   P1   │   P2    │ P3 │      P4      │<br>
+                                └────────┴─────────┴────┴──────────────┘<br>
+                                0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13<br>
+                            </div>
+
+                            <strong>Final Results Table:</strong>
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>AT</th>
+                                        <th>BT</th>
+                                        <th>CT</th>
+                                        <th>TAT</th>
+                                        <th>WT</th>
+                                    </tr>
+                                    <tr>
+                                        <td>P1</td>
+                                        <td>0</td>
+                                        <td>4</td>
+                                        <td>4</td>
+                                        <td>4</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P2</td>
+                                        <td>1</td>
+                                        <td>3</td>
+                                        <td>7</td>
+                                        <td>6</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P3</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                        <td>8</td>
+                                        <td>6</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P4</td>
+                                        <td>3</td>
+                                        <td>5</td>
+                                        <td>13</td>
+                                        <td>10</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr style="background: #f0f4ff; font-weight: bold;">
+                                        <td colspan="4">Average</td>
+                                        <td>6.5</td>
+                                        <td>3.25</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Calculations:</strong>
+                            <ul>
+                                <li><strong>Average Turnaround Time</strong> = (4 + 6 + 6 + 10) / 4 = 26 / 4 = <strong>6.5 ms</strong></li>
+                                <li><strong>Average Waiting Time</strong> = (0 + 3 + 5 + 5) / 4 = 13 / 4 = <strong>3.25 ms</strong></li>
+                            </ul>
+
+                            <div class="note-box">
+                                <strong>📝 Formulas:</strong><br>
+                                • Completion Time (CT) = Start Time + Burst Time<br>
+                                • Turnaround Time (TAT) = Completion Time - Arrival Time<br>
+                                • Waiting Time (WT) = Turnaround Time - Burst Time<br>
+                                • Response Time = Start Time - Arrival Time
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">📊 Convoy Effect Example</div>
+                            
+                            <strong>Problem Scenario:</strong> One long process followed by many short processes
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>Arrival Time</th>
+                                        <th>Burst Time</th>
+                                    </tr>
+                                    <tr>
+                                        <td>P1</td>
+                                        <td>0</td>
+                                        <td>24</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P2</td>
+                                        <td>1</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>P3</td>
+                                        <td>2</td>
+                                        <td>3</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="diagram">
+                                Gantt Chart (Convoy Effect):<br><br>
+                                ┌──────────────────────────┬─────┬─────┐<br>
+                                │           P1             │ P2  │ P3  │<br>
+                                └──────────────────────────┴─────┴─────┘<br>
+                                0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;24&nbsp;&nbsp;&nbsp;&nbsp;27&nbsp;&nbsp;&nbsp;&nbsp;30<br>
+                            </div>
+
+                            <ul>
+                                <li>P2 waits 23 ms (arrived at 1, started at 24)</li>
+                                <li>P3 waits 25 ms (arrived at 2, started at 27)</li>
+                                <li>Average Waiting Time = (0 + 23 + 25) / 3 = <strong>16 ms</strong> (Very high!)</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <strong>Convoy Effect:</strong> Short processes get stuck behind long processes, like cars stuck behind a slow truck on a single-lane road. This significantly increases average waiting time.
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">✅ Advantages of FCFS</div>
+                            <ul>
+                                <li><strong>Simplicity:</strong> Easiest to understand and implement</li>
+                                <li><strong>Fair:</strong> Every process gets CPU in order of arrival</li>
+                                <li><strong>No Starvation:</strong> Every process will eventually execute</li>
+                                <li><strong>Low Overhead:</strong> No complex calculations or context switching</li>
+                                <li><strong>Predictable:</strong> Easy to predict when a process will execute</li>
+                            </ul>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">❌ Disadvantages of FCFS</div>
+                            <ul>
+                                <li><strong>Convoy Effect:</strong> Short processes wait for long processes</li>
+                                <li><strong>High Average Waiting Time:</strong> Especially when long processes arrive first</li>
+                                <li><strong>Non-Preemptive:</strong> Cannot interrupt running process for urgent tasks</li>
+                                <li><strong>Poor for Time-Sharing:</strong> Not suitable for interactive systems</li>
+                                <li><strong>No Priority:</strong> Cannot prioritize important processes</li>
+                                <li><strong>CPU Utilization:</strong> May lead to poor CPU utilization in I/O bound scenarios</li>
+                            </ul>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🎯 Use Cases</div>
+                            <ul>
+                                <li><strong>Batch Processing Systems:</strong> Where jobs are processed sequentially</li>
+                                <li><strong>Print Queue:</strong> Documents printed in order of submission</li>
+                                <li><strong>Simple Embedded Systems:</strong> With predictable workloads</li>
+                                <li><strong>Background Tasks:</strong> Non-critical batch jobs</li>
+                            </ul>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>⚡ Performance Tip:</strong> FCFS works best when:
+                            <ul>
+                                <li>All processes have similar burst times</li>
+                                <li>Processes arrive at similar intervals</li>
+                                <li>No time-critical tasks are involved</li>
+                            </ul>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">🔄 Comparison with Other Algorithms</div>
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>Aspect</th>
+                                        <th>FCFS</th>
+                                        <th>SJF</th>
+                                        <th>Round Robin</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Complexity</td>
+                                        <td>Very Simple</td>
+                                        <td>Moderate</td>
+                                        <td>Moderate</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Preemption</td>
+                                        <td>Non-preemptive</td>
+                                        <td>Can be both</td>
+                                        <td>Preemptive</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Waiting Time</td>
+                                        <td>High (variable)</td>
+                                        <td>Low (optimal)</td>
+                                        <td>Moderate</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Starvation</td>
+                                        <td>No</td>
+                                        <td>Possible</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Overhead</td>
+                                        <td>Very Low</td>
+                                        <td>Low</td>
+                                        <td>High</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="question-card" onclick="toggleAnswer(this)">
                     <div class="question">3. Explain different types of memory management techniques in Operating system.</div>
                     <div class="answer">
-                        <ul>
-                            <li><strong>Contiguous Allocation:</strong> Each process in contiguous memory block</li>
-                            <li><strong>Paging:</strong> Divide memory into fixed-size pages</li>
-                            <li><strong>Segmentation:</strong> Divide memory into variable-size segments</li>
-                            <li><strong>Virtual Memory:</strong> Use secondary storage to extend RAM</li>
-                        </ul>
-                        <br>
-                        <ul>
-                            <li>✅ <strong>Advantages:</strong> Efficient memory use, protection</li>
-                            <li>❌ <strong>Disadvantages:</strong> Complexity, overhead</li>
-                        </ul>
+                        <div class="subsection">
+                            <div class="subsection-title">📌 Introduction</div>
+                            Memory management is a critical function of operating systems that handles the allocation, tracking, and deallocation of memory resources. Efficient memory management ensures optimal system performance, prevents memory wastage, and provides protection between processes.
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">1️⃣ Contiguous Memory Allocation</div>
+                            
+                            <strong>Description:</strong> Each process is allocated a single contiguous block of memory. The entire process resides in one continuous section of memory.
+                            
+                            <strong>Types:</strong>
+
+                            <div class="subsection-title">a) Fixed Partitioning (Static Partitioning)</div>
+                            <ul>
+                                <li><strong>Concept:</strong> Memory is divided into fixed-size partitions at system startup</li>
+                                <li><strong>Process:</strong> Each process is loaded into a partition that can accommodate it</li>
+                                <li><strong>Partition Sizes:</strong> Can be equal or unequal</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Fixed Partitioning:<br><br>
+                                ┌─────────────────┐<br>
+                                │   OS (100 KB)   │<br>
+                                ├─────────────────┤<br>
+                                │ Partition 1     │ 200 KB<br>
+                                ├─────────────────┤<br>
+                                │ Partition 2     │ 200 KB<br>
+                                ├─────────────────┤<br>
+                                │ Partition 3     │ 300 KB<br>
+                                ├─────────────────┤<br>
+                                │ Partition 4     │ 400 KB<br>
+                                └─────────────────┘<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Simple to implement</td>
+                                        <td>Internal fragmentation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fast allocation</td>
+                                        <td>Limited number of processes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No external fragmentation</td>
+                                        <td>Inefficient memory use</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="subsection-title">b) Dynamic Partitioning (Variable Partitioning)</div>
+                            <ul>
+                                <li><strong>Concept:</strong> Partitions are created dynamically based on process size</li>
+                                <li><strong>Process:</strong> Exact amount of memory needed is allocated</li>
+                                <li><strong>Flexibility:</strong> Partition size varies with process requirements</li>
+                            </ul>
+
+                            <strong>Allocation Strategies:</strong>
+                            <ul>
+                                <li><strong>First Fit:</strong> Allocate first hole large enough
+                                    <ul>
+                                        <li>Fast allocation</li>
+                                        <li>May leave small unusable holes</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Best Fit:</strong> Allocate smallest hole that fits
+                                    <ul>
+                                        <li>Minimizes wasted space</li>
+                                        <li>Slower (must search entire list)</li>
+                                        <li>Creates tiny unusable holes</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Worst Fit:</strong> Allocate largest available hole
+                                    <ul>
+                                        <li>Leaves larger remaining holes</li>
+                                        <li>Slower allocation</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <div class="diagram">
+                                Dynamic Partitioning Example:<br><br>
+                                Initial: [OS][─────── Free Space ───────]<br>
+                                <br>
+                                After P1 (100KB): [OS][P1][ Free Space ]<br>
+                                After P2 (200KB): [OS][P1][P2][ Free ]<br>
+                                After P1 exits:   [OS][  ][P2][ Free ]<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hole (External Fragmentation)<br>
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>No internal fragmentation</td>
+                                        <td>External fragmentation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficient memory use</td>
+                                        <td>Complex allocation algorithms</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flexible partition sizes</td>
+                                        <td>Requires compaction</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="note-box">
+                                <strong>Fragmentation Types:</strong><br>
+                                • <strong>Internal Fragmentation:</strong> Wasted space within allocated partition<br>
+                                • <strong>External Fragmentation:</strong> Free memory scattered in small holes
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">2️⃣ Paging</div>
+                            
+                            <strong>Description:</strong> Memory is divided into fixed-size blocks called frames (physical memory) and pages (logical memory). Eliminates external fragmentation.
+                            
+                            <strong>Key Concepts:</strong>
+                            <ul>
+                                <li><strong>Page:</strong> Fixed-size block of logical memory (typically 4KB)</li>
+                                <li><strong>Frame:</strong> Fixed-size block of physical memory (same size as page)</li>
+                                <li><strong>Page Table:</strong> Maps logical pages to physical frames</li>
+                                <li><strong>Page Number:</strong> Index into page table</li>
+                                <li><strong>Offset:</strong> Location within page/frame</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Paging Architecture:<br><br>
+                                Logical Address: [Page Number | Offset]<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌──────────────┐<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  Page Table  │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ Page | Frame │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  0   |   2   │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  1   |   5   │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  2   |   1   │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──────┬───────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                Physical Address: [Frame Number | Offset]<br>
+                            </div>
+
+                            <strong>Address Translation:</strong>
+                            <div class="code-block">
+Logical Address = 32-bit (Page size = 4KB = 2^12 bytes)
+
+Page Number = Logical Address / Page Size
+Offset = Logical Address % Page Size
+
+Physical Address = (Frame Number × Page Size) + Offset
+
+Example:
+Logical Address = 8196 (decimal)
+Page Size = 4096 bytes
+Page Number = 8196 / 4096 = 2
+Offset = 8196 % 4096 = 4
+
+If Page 2 maps to Frame 5:
+Physical Address = (5 × 4096) + 4 = 20484
+                            </div>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>No external fragmentation</td>
+                                        <td>Internal fragmentation (last page)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Easy to allocate memory</td>
+                                        <td>Page table overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supports virtual memory</td>
+                                        <td>Address translation overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Process can be non-contiguous</td>
+                                        <td>Requires hardware support (MMU)</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <strong>Optimization Techniques:</strong>
+                            <ul>
+                                <li><strong>TLB (Translation Lookaside Buffer):</strong> Cache for page table entries, speeds up address translation</li>
+                                <li><strong>Multi-level Paging:</strong> Hierarchical page tables to reduce memory overhead</li>
+                                <li><strong>Inverted Page Table:</strong> One entry per frame instead of per page</li>
+                            </ul>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">3️⃣ Segmentation</div>
+                            
+                            <strong>Description:</strong> Memory is divided into variable-size segments based on logical divisions of a program (code, data, stack, heap).
+                            
+                            <strong>Characteristics:</strong>
+                            <ul>
+                                <li><strong>Logical Division:</strong> Reflects program structure</li>
+                                <li><strong>Variable Size:</strong> Segments can be different sizes</li>
+                                <li><strong>Segment Table:</strong> Maps segment number to base address and limit</li>
+                                <li><strong>Protection:</strong> Each segment can have different access rights</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Segmentation:<br><br>
+                                Logical Address: [Segment Number | Offset]<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┌────────────────────────┐<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│   Segment Table        │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ Seg | Base  | Limit    │<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  0  | 1000  | 400      │ Code<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  1  | 4000  | 1000     │ Data<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│  2  | 7000  | 500      │ Stack<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└────────┬───────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                Physical Address = Base + Offset<br>
+                                (if Offset < Limit, else Segmentation Fault)<br>
+                            </div>
+
+                            <strong>Segment Types:</strong>
+                            <ul>
+                                <li><strong>Code Segment:</strong> Program instructions (read-only, executable)</li>
+                                <li><strong>Data Segment:</strong> Global variables (read-write)</li>
+                                <li><strong>Stack Segment:</strong> Function calls, local variables (read-write)</li>
+                                <li><strong>Heap Segment:</strong> Dynamic memory allocation (read-write)</li>
+                            </ul>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Logical organization</td>
+                                        <td>External fragmentation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Protection and sharing</td>
+                                        <td>Complex memory management</td>
+                                    </tr>
+                                    <tr>
+                                        <td>No internal fragmentation</td>
+                                        <td>Segment table overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supports modular programs</td>
+                                        <td>Requires compaction</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">4️⃣ Virtual Memory</div>
+                            
+                            <strong>Description:</strong> Technique that allows execution of processes that may not be completely in physical memory. Uses secondary storage (disk) as extension of RAM.
+                            
+                            <strong>Key Concepts:</strong>
+                            <ul>
+                                <li><strong>Demand Paging:</strong> Load pages only when needed</li>
+                                <li><strong>Page Fault:</strong> Occurs when referenced page not in memory</li>
+                                <li><strong>Swap Space:</strong> Disk area used for paging</li>
+                                <li><strong>Working Set:</strong> Set of pages currently in use</li>
+                            </ul>
+
+                            <div class="diagram">
+                                Virtual Memory Architecture:<br><br>
+                                ┌─────────────────────┐<br>
+                                │  Virtual Memory     │ (Large - e.g., 4GB)<br>
+                                │  ┌──────────────┐   │<br>
+                                │  │ Page 0       │   │<br>
+                                │  │ Page 1       │───┼──► In RAM<br>
+                                │  │ Page 2       │   │<br>
+                                │  │ Page 3       │───┼──► On Disk<br>
+                                │  │ Page 4       │───┼──► In RAM<br>
+                                │  │ ...          │   │<br>
+                                │  └──────────────┘   │<br>
+                                └─────────────────────┘<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                                ┌─────────────────────┐<br>
+                                │  Physical Memory    │ (Small - e.g., 1GB)<br>
+                                │  [Frame 0][Frame 1] │<br>
+                                │  [Frame 2][Frame 3] │<br>
+                                └─────────────────────┘<br>
+                            </div>
+
+                            <strong>Page Replacement Algorithms:</strong>
+                            <ul>
+                                <li><strong>FIFO:</strong> Replace oldest page</li>
+                                <li><strong>LRU (Least Recently Used):</strong> Replace least recently accessed page</li>
+                                <li><strong>Optimal:</strong> Replace page not used for longest time in future</li>
+                                <li><strong>Clock Algorithm:</strong> Approximation of LRU using reference bit</li>
+                            </ul>
+
+                            <strong>Thrashing:</strong>
+                            <ul>
+                                <li><strong>Definition:</strong> System spends more time paging than executing</li>
+                                <li><strong>Cause:</strong> Too many processes, insufficient memory</li>
+                                <li><strong>Solution:</strong> Reduce multiprogramming level, increase memory</li>
+                            </ul>
+
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>✅ Advantages</th>
+                                        <th>❌ Disadvantages</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Run large programs with limited RAM</td>
+                                        <td>Slower than physical memory</td>
+                                    </tr>
+                                    <tr>
+                                        <td>More processes in memory</td>
+                                        <td>Page fault overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Logical memory > Physical memory</td>
+                                        <td>Thrashing risk</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Efficient memory utilization</td>
+                                        <td>Complex implementation</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-title">📊 Comparison of Memory Management Techniques</div>
+                            
+                            <div class="table-container">
+                                <table>
+                                    <tr>
+                                        <th>Technique</th>
+                                        <th>Fragmentation</th>
+                                        <th>Complexity</th>
+                                        <th>Flexibility</th>
+                                        <th>Best For</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Fixed Partitioning</td>
+                                        <td>Internal</td>
+                                        <td>Low</td>
+                                        <td>Low</td>
+                                        <td>Simple systems</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dynamic Partitioning</td>
+                                        <td>External</td>
+                                        <td>Medium</td>
+                                        <td>Medium</td>
+                                        <td>Variable processes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Paging</td>
+                                        <td>Internal (minimal)</td>
+                                        <td>High</td>
+                                        <td>High</td>
+                                        <td>Modern OS</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Segmentation</td>
+                                        <td>External</td>
+                                        <td>High</td>
+                                        <td>High</td>
+                                        <td>Logical programs</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Virtual Memory</td>
+                                        <td>None</td>
+                                        <td>Very High</td>
+                                        <td>Very High</td>
+                                        <td>Large applications</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>🎯 Modern Approach:</strong> Most modern operating systems (Windows, Linux, macOS) use a combination of paging and virtual memory, sometimes with segmentation (segmented paging) for optimal performance and flexibility.
+                        </div>
+
+                        <div class="example-box">
+                            <strong>💡 Real-World Example:</strong> When you run a large game on your computer with 8GB RAM, virtual memory allows the game to use 12GB by storing less-used data on your SSD/HDD. The OS intelligently swaps data between RAM and disk as needed.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -523,9 +2634,11 @@ Algorithm:
         function expandAll() {
             const allAnswers = document.querySelectorAll('.answer');
             const allSections = document.querySelectorAll('.section-content');
+            const allHeaders = document.querySelectorAll('.section-header');
             
             allAnswers.forEach(answer => answer.classList.add('show'));
             allSections.forEach(section => section.classList.remove('collapsed'));
+            allHeaders.forEach(header => header.classList.remove('collapsed'));
         }
 
         const observer = new IntersectionObserver((entries) => {
